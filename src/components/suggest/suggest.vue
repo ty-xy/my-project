@@ -63,6 +63,7 @@ export default {
              let ret = []
              if(data.zhida&&data.zhida.singeid){
                  ret.push({...data.zhida,...{type:TYPE_SINGER}})
+                 console.log(ret)
              }
              if(data.song){
                  ret = ret.concat(this._normalizeSongs(data.song.list))

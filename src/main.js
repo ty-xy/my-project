@@ -11,8 +11,8 @@ import VueLazyLoad from 'vue-lazyload'
 
 import 'common/stylus/index.styl'
 
-FastClick.attach(document.body)
-
+// FastClick.attach(document.body)
+// window.addEventListener('touchmove', FastClick, { passive: false })
 Vue.config.productionTip = false
 Vue.use(VueLazyLoad, {
   loading: require('common/image/default.png')

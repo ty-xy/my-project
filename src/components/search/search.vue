@@ -38,15 +38,14 @@
       },
       created(){
           this._getHotKey()
+        //   this.addQuery()
       },
       methods:{
-        addQuery(query){
+        addQuery(query){  
             this.$refs.searchbox.setQuery(query)
         },
         onQueryChange(query){
             this.query = query
-            console.log(query)
-
         },
          _getHotKey(){
              getHotKey().then((res)=>{
@@ -103,9 +102,9 @@
               .icon-clear
                 font-size: $font-size-medium
                 color: $color-text-d
-    .search-result
-      position: fixed
-      width: 100%
-      top: 178px
-      bottom: 0
+      .search-result
+        position: fixed
+        width: 100%
+        top: 178px
+        bottom: 0
 </style>

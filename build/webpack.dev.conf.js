@@ -57,7 +57,8 @@ const devWebpackConfig = merge(baseWebpackConfig, {
             axios.get(url,{
                 headers:{
                     referer:'https://y.qq.com/n/yqq/playlist/4018696770.html',
-                    authority: 'c.y.qq.com'
+                    authority: 'c.y.qq.com',
+
                 },
                 params:req.query
             }).then((response)=>{
@@ -67,6 +68,21 @@ const devWebpackConfig = merge(baseWebpackConfig, {
                 console.log(e)
             })
           })
+        apiRoutes.get("/search",(req,res)=>{
+             const url = "https://c.y.qq.com/soso/fcgi-bin/search_for_qq_cp"
+             axios.get(url,{
+                 headers:{
+                     referer:"https://y.qq.com/m/index.html",
+                     authority:"c.y.qq.com"
+                 },
+                 params:req.query
+             }).then((response)=>{
+                res.json(response.data)
+
+            }).catch((e)=>{
+                console.log(e)
+            })
+        })
         app.use('/api', apiRoutes)
       },
     historyApiFallback: {
