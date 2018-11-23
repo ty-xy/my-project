@@ -1,5 +1,10 @@
 <template>
-  <scroll class="suggest" :data="result">
+  <scroll 
+  class="suggest" 
+  :data="result" 
+  :pullup="pullup"
+  @scrollToEnd="searchMore"
+  >
       <ul class="suggest-list">
           <li class="suggest-item" v-for="item in result " :key="item.id">
               <div class="icon">
@@ -8,17 +13,24 @@
               <div class="name">
                   <p class="text" v-html="getDisplayName(item)"></p>
               </div>
+             
           </li>
+           <loading v-show="hasMore" title=""></loading>
       </ul>
+      <!-- <div v-show="!hasMore && !result.length" class="no-result-wrapper">
+        <no-result title="抱歉，暂无搜索结果"></no-result>
+      </div> -->
   </scroll>
 </template>
 <script  type="text/ecmascript-6">
 import {search} from 'api/search'
 import {ERR_OK} from 'api/config'
 import {createSong} from 'common/js/song'
-const TYPE_SINGER = "singer"
 import {filterSinger} from 'common/js/song'
 import Scroll from 'base/scroll/scroll'
+import Loading from 'base/loading/loading'
+const perpage = 20
+const TYPE_SINGER = "singer"
 export default {
     props:{
         query:{
@@ -33,17 +45,41 @@ export default {
     data(){
         return {
             page:1,
-            result:[]
+            result:[],
+            pullup:true,
+            hasMore:true
         }
     },
     methods:{
          search(){
-             search (this.query,this.page,this.showSinger).then((res)=>{
+             this.hasMore = true
+             search (this.query,this.page,this.showSinger,perpage).then((res)=>{
                   if(ERR_OK === res.code){
                       console.log(res.data)
                       this.result =  this.genResult(res.data)
+                      console.log(this.result)
+                      this._checkMore(res.data)
                   }
              })
+         },
+         searchMore(){
+              if(!this.hasMore){
+                  return
+              }
+              this.page++
+              search (this.query,this.page,this.showSinger,perpage).then((res)=>{
+                  if(ERR_OK === res.code){
+                      this.result =  this.result.concat(this.genResult(res.data))
+                    //   console.log(this.result)
+                      this._checkMore(res.data)
+                  }
+             })
+         },
+         _checkMore(data){
+             const song = data.song
+             if(!song.list.length||(song.curnum + song.curpage*perpage)>song.totalnum){
+                   this.hasMore = false 
+             }
          },
          getIconClass(item){
              if(item.type===TYPE_SINGER){
@@ -86,7 +122,8 @@ export default {
         }
     },
     components:{
-        Scroll
+        Scroll,
+        Loading
     }
 }
 </script>
